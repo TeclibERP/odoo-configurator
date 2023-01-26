@@ -1,0 +1,28 @@
+---
+account:
+    modules:
+        - account
+        - l10n_fr
+        - l10n_fr_fec
+    config:
+        tax_calculation_rounding_method: round_globally
+        group_warning_account: True
+        group_analytic_accounting: True
+        group_analytic_tags: True
+        chart_template_id: get_ref("l10n_fr.l10n_fr_pcg_chart_template")
+    data:
+        invoice: FAC%(year)s%(month)s
+        refund: AV%(year)s%(month)s
+        supplier_invoice: FFAC%(year)s%(month)s
+        supplier_refund: FAV%(year)s%(month)s
+
+partner:
+    defaults:
+        Condition de règlement:
+            model: res.partner
+            field: property_payment_term_id
+            value: get_ref("account.account_payment_term_immediate")
+        Pays:
+            model: res.partner
+            field: country_id
+            value: get_ref("base.fr")

@@ -1,0 +1,14 @@
+---
+purchase:
+    modules:
+        - purchase
+    config:
+        lock_confirmed_po: True
+        group_warning_purchase: True
+    datas:
+        Séquence des achats:
+            on_install_only: True
+            model: ir.sequence
+            force_id: purchase.seq_purchase_order
+            values:
+                prefix: A%(year)s%(month)s

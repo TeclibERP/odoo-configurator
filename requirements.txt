@@ -1,0 +1,10 @@
+flask
+flask-Bootstrap4
+HiYaPyCo
+pykeepass
+unidecode
+urllib3
+requests
+bs4
+pyvat
+cryptocode

@@ -1,0 +1,11 @@
+---
+website:
+    modules:
+        - website
+        - website_slides
+        - website_blog
+        - website_crm
+        - website_partner
+        - website_enterprise
+        - website_mass_mailing
+

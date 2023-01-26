@@ -1,0 +1,42 @@
+---
+sale:
+    modules:
+        - sale_management
+    config:
+        group_product_variant: True
+        group_discount_per_so_line: True
+        group_sale_delivery_address: True
+        group_sale_order_template: True
+        group_warning_sale: True
+        product_pricelist_setting: advanced
+        auth_signup_uninvited: b2b
+        portal_confirmation_sign: True
+        portal_confirmation_pay: True
+        deposit_default_product_id:
+            values:
+                name: Acompte
+                default_code: ACOMPTE
+                sale_ok: False
+                purchase_ok: False
+            key: default_code
+            model: product.product
+    datas:
+        Template par défaut:
+            model: sale.order.template
+            force_id: 1
+            values:
+                name: Template par défaut
+                require_signature: True
+                mail_template_id: get_ref("sale.email_template_edi_sale")
+        Équipe commercial par défaut:
+            model: crm.team
+            force_id: sales_team.team_sales_department
+            values:
+                name: Vente direct
+
+        Séquence des ventes:
+            on_install_only: True
+            model: ir.sequence
+            force_id: sale.seq_sale_order
+            values:
+                prefix: V%(year)s%(month)s

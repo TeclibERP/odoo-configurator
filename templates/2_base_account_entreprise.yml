@@ -1,0 +1,7 @@
+---
+# New since group_fiscal_year moved from community to enterprise in v14
+account:
+    modules:
+        - account_accountant
+    config:
+        group_fiscal_year: True

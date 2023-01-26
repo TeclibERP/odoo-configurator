@@ -1,0 +1,89 @@
+---
+account:
+    config:
+        sale_tax_id:
+            values:
+                name: TVA non applicable (vente)
+                type_tax_use: sale
+                amount: 0
+            key: name
+            model: account.tax
+        purchase_tax_id:
+            values:
+                name: TVA non applicable (achat)
+                type_tax_use: purchase
+                amount: 0
+            key: name
+            model: account.tax
+    datas:
+        Groupe de compte:
+            model: account.analytic.group
+            force_id: group_analytic_analyse
+            values:
+                name: Analyse Taxes Auto-entreprise
+
+        Compte Analytique Projets:
+            model: account.analytic.account
+            force_id: external_config.analytic_project
+            values:
+                name: Projets
+                group_id/id: external_config.group_analytic_analyse
+        Compte Analytique Taxes Services:
+            model: account.analytic.account
+            force_id: analytic_tax_service
+            values:
+                name: Taxes Service
+                group_id/id: external_config.group_analytic_analyse
+        Compte Analytique Taxes Produits:
+            model: account.analytic.account
+            force_id: analytic_tax_product
+            values:
+                name: Taxes Produit
+                group_id/id: external_config.group_analytic_analyse
+
+        Analyse des taxes services:
+            model: account.analytic.tag
+            force_id: tag_tax_service
+            values:
+                name: Analyse des taxes services
+                active_analytic_distribution: True
+        Distribution Projet Service:
+            model: account.analytic.distribution
+            force_id: distribution_service_project
+            values:
+                account_id/id: external_config.analytic_project
+                percentage: 78
+                tag_id/id: external_config.tag_tax_service
+        Distribution Taxes Service:
+            model: account.analytic.distribution
+            force_id: distribution_service_tax
+            values:
+                account_id/id: external_config.analytic_tax_service
+                percentage: 22
+                tag_id/id: external_config.tag_tax_service
+
+        Analyse des taxes produit:
+            model: account.analytic.tag
+            force_id: tag_tax_product
+            values:
+                name: Analyse des taxes produits
+                active_analytic_distribution: True
+        Distribution Projet Produit:
+            model: account.analytic.distribution
+            force_id: distribution_product_project
+            values:
+                account_id/id: external_config.analytic_project
+                percentage: 90
+                tag_id/id: external_config.tag_tax_product
+        Distribution Taxes Produit:
+            model: account.analytic.distribution
+            force_id: distribution_product_tax
+            values:
+                account_id/id: external_config.analytic_tax_product
+                percentage: 10
+                tag_id/id: external_config.tag_tax_product
+
+sale:
+    config:
+        use_invoice_terms: True
+        invoice_terms: TVA non applicable, article 293B du code général des impôts.

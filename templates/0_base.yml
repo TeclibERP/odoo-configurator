@@ -1,0 +1,20 @@
+---
+base:
+    modules:
+        - contacts
+        - base_automation
+        - base_import_module
+        - board
+    config:
+        user_default_rights: True
+        module_partner_autocomplete: False
+        external_email_server_default: True
+
+users:
+    datas:
+        OdooBot timezone:
+          model: res.users
+          force_id: base.user_root
+          values:
+            tz: Europe/Paris
+            login: __system__
