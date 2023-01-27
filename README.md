@@ -79,7 +79,7 @@ To uninstall modules use "uninstall_modules"
         
 # Update data
 
-You can update a values on a model according to a domain with "update_domain":
+You can update values on a model according to a domain with "update_domain":
 
     Update Example:
       model: res.partner
@@ -134,8 +134,8 @@ To set groups on a user you can remove previous groups with "unlink all":
 - activate
 - update_domain
 - search_value_xml_id
-    - this option allow to pass an id from xml_id to a domain
-    - Can be user with update_domain, activate, deactivate:
+    - this option allows to pass an id from xml_id to a domain
+    - Can be used with update_domain, activate, deactivate:
         
               Deactivate Partner Title doctor:
                   model: res.partner.title
@@ -170,7 +170,7 @@ To set a Mattermost url and channel where to send notifications:
     mattermost_channel: my-channel
     mattermost_url: https://mattermost.xxx.com/hooks/dfh654fgh
 
-To avoid Mattermost notification add in main yaml file:
+To avoid Mattermost notification, add in main yaml file:
 
     no_notification: True
 
@@ -223,13 +223,13 @@ Optional fields:
   - **skip_line** : index of the record to start with
 
 
-#### Contributors
+## Contributors
 
 * David Halgand
 * Michel Perrocheau
 
 
-#### Maintainer
+## Maintainer
 
 This module is maintained by [Teclib' ERP](https://www.teclib-erp.com).
 
