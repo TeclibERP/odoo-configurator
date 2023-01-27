@@ -4,6 +4,7 @@
 
 import logging
 import os.path
+import sys
 
 import hiyapyco
 
@@ -37,6 +38,7 @@ class Configurator:
     def __init__(self, paths, install, update, debug, debug_xmlrpc, keepass):
         self.password_manager = PasswordManager(keepass)
         self.paths = paths
+        self.configurator_dir = os.path.dirname(sys.argv[0])
         if install:
             self.mode.append('install')
         if update:
@@ -76,8 +78,7 @@ class Configurator:
 
         while len(parsed_config.get("pre_update", [])) != count_pre_update:
             count_pre_update = len(parsed_config.get("pre_update", []))
-            config_files = ["./templates/" + i if not os.path.isfile(i) else i for i in
-                            parsed_config.get("pre_update", [])]
+            config_files = self.get_files_path(parsed_config['pre_update'])
             logger.info("Pre Update Loading %s" % (",".join(config_files)))
             pre_update_config = hiyapyco.load(config_files, method=hiyapyco.METHOD_MERGE, interpolate=True,
                                               failonmissingfiles=True, loglevel='INFO')
@@ -85,8 +86,7 @@ class Configurator:
 
         while len(parsed_config.get("inherits", [])) != count_inherit:
             count_inherit = len(parsed_config.get("inherits", []))
-            config_files = self.paths + ["./templates/" + i if not os.path.isfile(i) else i for i in
-                                         parsed_config.get("inherits", [])] + self.paths
+            config_files = self.paths + self.get_files_path(parsed_config['inherits']) + self.paths
             logger.info("Configuration Loading %s" % (",".join(config_files)))
             parsed_config = hiyapyco.load(config_files, method=hiyapyco.METHOD_MERGE, interpolate=True,
                                           failonmissingfiles=True, loglevel='INFO')
@@ -95,8 +95,7 @@ class Configurator:
         count_script = 0
         while len(parsed_config.get("script_files", [])) != count_script:
             count_script = len(parsed_config.get("script_files", []))
-            script_files = ["./templates/" + i if not os.path.isfile(i) else i for i in
-                                         parsed_config.get("script_files", [])]
+            script_files = self.get_files_path(parsed_config['script_files'])
 
             for script_file in script_files:
                 parsed_script = hiyapyco.load(script_file, method=hiyapyco.METHOD_MERGE, interpolate=True,
@@ -108,9 +107,27 @@ class Configurator:
                     parsed_script['title'] = os.path.basename(script_file)
                 parsed_config['scripts'].append(parsed_script)
 
-
-
         return parsed_config, pre_update_config
+
+    def get_files_path(self, files):
+        res = []
+        for file in files:
+            if os.path.isfile(file):
+                res.append(file)
+            elif os.path.isfile(os.path.join(self.configurator_dir, 'templates', file)):
+                res.append(os.path.join(self.configurator_dir, 'templates', file))
+            else:
+                file_found = ''
+                for path in self.paths:
+                    file_path = os.path.join(os.path.dirname(path), file)
+                    if os.path.isfile(file_path):
+                        file_found = file_path
+
+                if file_found:
+                    res.append(file_found)
+                else:
+                    logger.info("File not found: %s" % file)
+        return res
 
     def get_log(self):
         return "\n".join(self.log_history)
