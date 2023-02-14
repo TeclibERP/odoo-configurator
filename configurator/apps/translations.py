@@ -14,7 +14,7 @@ class OdooTranslations(base.OdooModule):
         self._context['active_test'] = False
         translations = self._datas.get(self._key, {})
         installed_translations = []
-        odoo_lang = self.execute_odoo('res.lang', 'search_read', [[('code', 'in', translations)], ['code', 'active']],
+        odoo_lang = self.execute_odoo('res.lang', 'search_read', [[('code', 'in', translations)], ['id', 'code', 'active']],
                                       {'context': self._context})
         for lang_code in translations:
             for lang in odoo_lang:
@@ -23,7 +23,11 @@ class OdooTranslations(base.OdooModule):
                         self.logger.info("\t- Translation %s already installed" % lang_code)
                     else:
                         self.logger.info("\t- Install %s Translation" % lang_code)
-                        wizard_id = self.execute_odoo('base.language.install', 'create', [{'lang': lang_code}])
+                        if self._connection._version >= 16:
+                            wizard_id = self.execute_odoo('base.language.install', 'create',
+                                                          [{'lang_ids': [lang['id']]}])
+                        else:
+                            wizard_id = self.execute_odoo('base.language.install', 'create', [{'lang': lang_code}])
                         self.execute_odoo('base.language.install', 'lang_install', [wizard_id])
                     installed_translations.append(lang_code)
         missing_translations = set(translations) - set(installed_translations)
