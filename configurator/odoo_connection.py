@@ -124,7 +124,10 @@ class OdooConnection:
                 return self.execute_odoo(*args, retry=retry+1)
             else:
                 self.logger.error(pformat(args))
-                self.logger.error(e)
+                if isinstance(e, xmlrpc.client.Fault):
+                    self.logger.error(e.faultString)
+                else:
+                    self.logger.error(e)
                 raise e
 
     def get_ref(self, external_id):
