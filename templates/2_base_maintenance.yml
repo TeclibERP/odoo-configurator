@@ -1,0 +1,6 @@
+---
+website:
+    modules:
+        - maintenance
+        - mrp_maintenance
+
