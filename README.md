@@ -76,7 +76,22 @@ To uninstall modules use "uninstall_modules"
     base:
       uninstall_modules:
         - example_module
-        
+
+# Set config parameters (Settings)
+
+to set the value of a setting (res.config.settings)
+
+    settings:
+      config:
+        group_use_lead: True
+
+For a specific company:
+
+    settings main_company:
+      config:
+        company_id: get_ref("base.main_company")
+        chart_template_id: get_ref("l10n_fr.l10n_fr_pcg_chart_template")
+
 # Update data
 
 You can update values on a model according to a domain with "update_domain":
