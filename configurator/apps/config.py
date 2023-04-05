@@ -52,6 +52,9 @@ class OdooConfig(base.OdooModule):
         config_ids = self.execute_odoo('res.config.settings', 'search', [domain], {'context': self._context})
         if config_ids:
             config_id = config_ids[-1]
-            self.execute_odoo('res.config.settings', 'write', [config_id, self.deep_convert_dict(config)],
-                              {'context': self._context})
-            self.execute_odoo('res.config.settings', 'execute', [config_id], {'context': self._context})
+        else:
+            config_id = self.execute_odoo('res.config.settings', 'create', [self.deep_convert_dict(config)],
+                                          {'context': self._context})
+        self.execute_odoo('res.config.settings', 'write', [config_id, self.deep_convert_dict(config)],
+                          {'context': self._context})
+        self.execute_odoo('res.config.settings', 'execute', [config_id], {'context': self._context})
