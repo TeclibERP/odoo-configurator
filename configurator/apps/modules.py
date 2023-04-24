@@ -87,7 +87,6 @@ class OdooModules(base.OdooModule):
 
             if missing_modules:
                 self.logger.error("\t\tModules not found : %s " % (", ".join(missing_modules)))
-                exit(1)
 
             if to_install:
                 self.execute_odoo('ir.module.module', 'button_immediate_install', [to_install])
