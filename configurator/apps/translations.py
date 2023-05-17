@@ -23,7 +23,10 @@ class OdooTranslations(base.OdooModule):
                         self.logger.info("\t- Translation %s already installed" % lang_code)
                     else:
                         self.logger.info("\t- Install %s Translation" % lang_code)
-                        wizard_id = self.execute_odoo('base.language.install', 'create', [{'lang': lang_code}])
+                        if self._datas.get('version') < 15 :
+                            wizard_id = self.execute_odoo('base.language.install', 'create', [{'lang': lang_code}])
+                        else:
+                            wizard_id = self.execute_odoo('base.language.install', 'create', [{'lang_ids': [(6, 0, [lang['id']])]}])
                         self.execute_odoo('base.language.install', 'lang_install', [wizard_id])
                     installed_translations.append(lang_code)
         missing_translations = set(translations) - set(installed_translations)
