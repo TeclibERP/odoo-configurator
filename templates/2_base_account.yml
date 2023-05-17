@@ -7,10 +7,8 @@ account:
         - l10n_fr_fec
     config:
         tax_calculation_rounding_method: round_globally
-        group_fiscal_year: True
         group_warning_account: True
         group_analytic_accounting: True
-        group_analytic_tags: True
     data:
         invoice: FAC%(year)s%(month)s
         refund: AV%(year)s%(month)s

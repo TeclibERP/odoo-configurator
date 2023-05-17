@@ -6,6 +6,7 @@ from collections import OrderedDict
 from ast import literal_eval
 
 from . import base
+from .config import OdooConfig
 
 
 class OdooDatas(base.OdooModule):
@@ -23,8 +24,10 @@ class OdooDatas(base.OdooModule):
                     self.odoo_datas(data)
 
         scripts = datas.get('scripts', [])
+        odoo_config = OdooConfig(self._configurator)
         for script in scripts:
             self.logger.info("Script - %s" % script.get('title'))
+            odoo_config.execute_script_config(script)
             self.execute(script)
 
     def execute_pre_update_config_datas(self):
