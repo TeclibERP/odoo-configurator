@@ -39,5 +39,8 @@ class OdooImports(base.OdooModule):
             if isinstance(self._datas.get(key), dict) or isinstance(self._datas.get(key), OrderedDict):
                 for key_import, import_data in self._datas.get(key, {}).get('import_data', {}).items():
                     self.logger.info("\t- %s" % key_import)
+                    if not self.install_mode() and import_data.get('on_install_only', False):
+                        self.logger.info("\t\t* skipped not install mode")
+                        return
                     func = self.get_func(import_data)
                     func(import_data.get('file_path', ''), import_data.get('model', ''), params=import_data)
