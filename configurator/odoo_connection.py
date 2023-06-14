@@ -124,7 +124,10 @@ class OdooConnection:
                 return self.execute_odoo(*args, retry=retry+1)
             else:
                 self.logger.error(pformat(args))
-                self.logger.error(e)
+            if hasattr(e, 'faultString'):
+                self.logger.error(e.faultString, exc_info=True)
+            else:
+                self.logger.error(e, exc_info=True)
                 raise e
 
     def get_ref(self, external_id):
