@@ -209,17 +209,18 @@ A column "id" is required to allow update of datas.
 
 In yml file:
 
-    import_csv Product Template:
-        on_install_only: True
-        model: product.template
-        name_create_enabled_fields: uom_id,uom_po_id,subscription_template_id
-        file_path: ../datas/todoo/product.template.csv
-        specific_import: base/import_specific.py
-        specific_method: import_partner
-        batch_size: 200
-        skip_line: 1420
-        limit: 100
-        context: {'install_mode': True}
+    import_data:
+        import_csv Product Template:
+            on_install_only: True
+            model: product.template
+            name_create_enabled_fields: uom_id,uom_po_id,subscription_template_id
+            file_path: ../datas/todoo/product.template.csv
+            specific_import: base/import_specific.py
+            specific_method: import_partner
+            batch_size: 200
+            skip_line: 1420
+            limit: 100
+            context: {'install_mode': True}
 
 Required fields:
 
