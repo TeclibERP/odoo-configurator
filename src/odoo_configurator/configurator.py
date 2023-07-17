@@ -35,7 +35,7 @@ class Configurator:
     mode = ["config"]
     debug = False
 
-    def __init__(self, paths, install, update, debug, debug_xmlrpc, keepass):
+    def __init__(self, paths, install=False, update=False, debug=False, debug_xmlrpc=False, keepass=''):
         self.password_manager = PasswordManager(keepass)
         self.paths = paths
         self.configurator_dir = os.path.dirname(sys.argv[0])
