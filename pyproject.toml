@@ -1,0 +1,38 @@
+[build-system]
+requires      = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "odoo-configurator"
+version = "3.0.0"
+description = "Configure and update Odoo database with YAML files"
+readme = "README.md"
+authors = [{ name = "Michel Perrocheau", email = "myrrkel@gmail.com" },
+{ name = "David Halgand", email = "david@scalizer.fr" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Framework :: Odoo",
+]
+keywords = ["odoo", "configurator", "xmlprc", "yaml"]
+dependencies = [
+    "HiYaPyCo",
+    "pykeepass",
+    "unidecode",
+    "urllib3",
+    "bs4",
+    "pyvat",
+    "cryptocode",
+]
+requires-python = ">=3.9"
+
+[project.optional-dependencies]
+dev = ["twine", "bumpver", "pip-tools", "pytest", "check-manifest"]
+
+[project.urls]
+Homepage = "https://github.com/TeclibERP/odoo-configurator"
+
+[project.scripts]
+odoo-configurator = "odoo_configurator.__main__:main"
