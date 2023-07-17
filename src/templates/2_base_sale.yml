@@ -1,5 +1,17 @@
 ---
 sale:
+
+    Deposit Default product_id:
+        values:
+            name: Acompte
+            default_code: ACOMPTE
+            sale_ok: False
+            purchase_ok: False
+        key: default_code
+        model: product.product
+
+
+
     modules:
         - sale_management
     config:
@@ -12,14 +24,7 @@ sale:
         auth_signup_uninvited: b2b
         portal_confirmation_sign: True
         portal_confirmation_pay: True
-        deposit_default_product_id:
-            values:
-                name: Acompte
-                default_code: ACOMPTE
-                sale_ok: False
-                purchase_ok: False
-            key: default_code
-            model: product.product
+
     datas:
         Template par défaut:
             model: sale.order.template

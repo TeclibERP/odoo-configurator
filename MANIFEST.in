@@ -1,0 +1,4 @@
+recursive-include src *.yml
+include *.png
+include *.py
+include *.txt

@@ -23,7 +23,7 @@ class ImportConfigurator(base.OdooModule):
 
                     self.logger.info("\t- %s : %s" % (key, action_name))
                     res = self.execute_odoo('ir.config_parameter', 'search_read',
-                                            [[('key', '=', 'configurator.access.token')],
+                                            [[('key', '=', 'odoo_configurator.access.token')],
                                              ['value']],
                                             {'context': self._context})
                     if res:
@@ -36,9 +36,9 @@ class ImportConfigurator(base.OdooModule):
                               (self._configurator.connection._url, token)
                         r = s.get(url=url)
 
-                        open('configurator.zip', 'wb').write(r.content)
+                        open('odoo_configurator.zip', 'wb').write(r.content)
                         dest_path = os.path.dirname(self._configurator.paths[0])+'/config'
-                        with ZipFile('configurator.zip', 'r') as zip:
+                        with ZipFile('odoo_configurator.zip', 'r') as zip:
                             zip_files = zip.namelist()
                             for export_file in import_configurator:
                                 for zip_file in zip_files:
@@ -56,7 +56,7 @@ class ImportConfigurator(base.OdooModule):
 
                     self.logger.info("\t- %s : %s" % (key, action_name))
                     res = self.execute_odoo('ir.config_parameter', 'search_read',
-                                            [[('key', '=', 'configurator.access.token')],
+                                            [[('key', '=', 'odoo_configurator.access.token')],
                                              ['value']],
                                             {'context': self._context})
                     if res:
@@ -89,7 +89,7 @@ class ImportConfigurator(base.OdooModule):
                 configurator_model_files = self._datas.get(key).get(action_name, {})
                 if configurator_model_files:
                     res = self.execute_odoo('ir.config_parameter', 'search_read',
-                                            [[('key', '=', 'configurator.access.token')],
+                                            [[('key', '=', 'odoo_configurator.access.token')],
                                              ['value']],
                                             {'context': self._context})
                     if res:
@@ -100,7 +100,7 @@ class ImportConfigurator(base.OdooModule):
                           (self._configurator.connection._url, token)
                     self.logger.info("\t- %s : %s" % (key, action_name))
                     res = self.execute_odoo('ir.config_parameter', 'search_read',
-                                            [[('key', '=', 'configurator.access.token')],
+                                            [[('key', '=', 'odoo_configurator.access.token')],
                                              ['value']],
                                             {'context': self._context})
                     if res:

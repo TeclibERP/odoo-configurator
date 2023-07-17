@@ -4,10 +4,10 @@ odoo-configurator
 Update Odoo database with YAML files
 
 ## Installation
-    sudo pip3 install -r requirements.txt
+    pip install odoo-configurator
 
 ## Usage
-    ./start_config.py ../work_dir/cutomer_name.local.yml
+    odoo-configurator ./work_dir/cutomer_name.local.yml
 
 Provided file must contain the auth/odoo section to set connexion parameters.
 
@@ -242,11 +242,11 @@ Optional fields:
 ## Contributors
 
 * David Halgand
-* Michel Perrocheau
+* Michel Perrocheau - [Github](https://github.com/myrrkel)
 
 
 ## Maintainer
 
-This module is maintained by [Teclib' ERP](https://www.teclib-erp.com).
+This module is maintained by [Hodei](https://www.hodei.net).
 
-![Teclib' ERP](./logo.png)
+![](./logo.jpg)

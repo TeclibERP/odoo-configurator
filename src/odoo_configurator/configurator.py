@@ -111,17 +111,30 @@ class Configurator:
 
     def get_files_path(self, files):
         res = []
+        template_dirs = [
+            os.path.join(self.configurator_dir, 'templates'),
+            os.path.join(self.configurator_dir, 'src/templates'),
+            os.path.join(os.path.dirname(__file__), '../templates'),
+        ]
         for file in files:
             if os.path.isfile(file):
                 res.append(file)
-            elif os.path.isfile(os.path.join(self.configurator_dir, 'templates', file)):
-                res.append(os.path.join(self.configurator_dir, 'templates', file))
             else:
                 file_found = ''
+                for template_dir in template_dirs:
+                    file_path = os.path.join(template_dir, file)
+                    if os.path.isfile(file_path):
+                        file_found = file_path
+                        res.append(file_path)
+                        continue
+                if file_found:
+                    continue
+
                 for path in self.paths:
                     file_path = os.path.join(os.path.dirname(path), file)
                     if os.path.isfile(file_path):
                         file_found = file_path
+                        continue
 
                 if file_found:
                     res.append(file_found)
