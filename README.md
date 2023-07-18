@@ -1,7 +1,10 @@
 odoo-configurator
 =================
 
-Update Odoo database with YAML files
+Odoo Configurator simplifies and automates the configuration of Odoo using YAML files. 
+It allows you to update the database, install/update/uninstall modules, configure settings, 
+manage users, and perform various data manipulation operations. 
+It is an essential tool for Odoo administrators looking to streamline their configuration workflow.
 
 ## Installation
     pip install odoo-configurator
