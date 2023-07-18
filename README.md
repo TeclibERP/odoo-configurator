@@ -37,7 +37,7 @@ Inherits param provide a list of configuration files witch content is merged bef
         - ../work_dir/cutomer_name/sales.yml
         - ../work_dir/cutomer_name/account.yml
     
-# Script Files
+## Script Files
 
 Script Files param provide a list of configuration files witch content will be executed sequentially.
 
@@ -80,7 +80,7 @@ To uninstall modules use "uninstall_modules"
       uninstall_modules:
         - example_module
 
-# Set config parameters (Settings)
+## Set config parameters (Settings)
 
 to set the value of a setting (res.config.settings)
 
@@ -95,7 +95,7 @@ For a specific company:
         company_id: get_ref("base.main_company")
         chart_template_id: get_ref("l10n_fr.l10n_fr_pcg_chart_template")
 
-# Update data
+## Update data
 
 You can update values on a model according to a domain with "update_domain":
 
@@ -105,7 +105,7 @@ You can update values on a model according to a domain with "update_domain":
       values:
         name: Example
 
-# Server Actions and Functions
+## Server Actions and Functions
 To call a model function:
 
     001 Call Function:
@@ -225,12 +225,12 @@ In yml file:
             limit: 100
             context: {'install_mode': True}
 
-Required fields:
+### Required fields:
 
   - model
   - file_path
 
-Optional fields:
+### Optional fields:
 
   - **name_create_enabled_fields** : List of the fields which are allowed to "Create the record if it doesn't exist"
   - **on_install_only** : Do the csv export only in **Install Mode**
