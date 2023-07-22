@@ -7,9 +7,11 @@ manage users, and perform various data manipulation operations.
 It is an essential tool for Odoo administrators looking to streamline their configuration workflow.
 
 ## Installation
+
     pip install odoo-configurator
 
 ## Usage
+
     odoo-configurator ./work_dir/cutomer_name.local.yml
 
 Provided file must contain the auth/odoo section to set connexion parameters.
@@ -103,9 +105,47 @@ For a specific company:
         company_id: get_ref("base.main_company")
         chart_template_id: get_ref("l10n_fr.l10n_fr_pcg_chart_template")
 
-## Update data
+## Create or update records
+    
+If the record with the xml id provided with force_id don't exist, the record will be created.    
 
-You can update values on a model according to a domain with "update_domain":
+    Records to create:
+        datas:
+            My record 1:
+                model: res.partner
+                force_id: external_config.partner_1
+                values:
+                    name: Partner 1
+                    ref: PARTNER1
+            My record 2:
+                model: res.user
+                force_id: base.user_admin
+                values:
+                    name: Admin User
+
+
+## Load records
+
+Using load parameter will speed up creation and update of record compared to single record update.
+
+    Records to load:
+        load: True
+        model: res.partner
+        datas:
+            My record 1:
+                force_id: external_config.record1
+                values:
+                    name: Record 1
+                    ref: REC1
+            My record 2:
+                force_id: external_config.record2
+                values:
+                    name: Record 2
+                    ref: REC2
+
+## Update records with a domain
+
+To update values of multiple records, set a domain with "update_domain" :
 
     Update Example:
       model: res.partner
@@ -114,6 +154,7 @@ You can update values on a model according to a domain with "update_domain":
         name: Example
 
 ## Server Actions and Functions
+
 To call a model function:
 
     001 Call Function:

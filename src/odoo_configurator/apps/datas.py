@@ -9,6 +9,18 @@ from . import base
 from .config import OdooConfig
 
 
+def prepare_load_values(load_fields, fields, values):
+    load_values = []
+    for load_field in load_fields:
+        if load_field in fields:
+            value = values[fields.index(load_field)]
+        else:
+            value = False
+        load_values.append(value)
+
+    return load_values
+
+
 class OdooDatas(base.OdooModule):
     _name = "Datas"
 
@@ -37,7 +49,14 @@ class OdooDatas(base.OdooModule):
 
     def execute_update_config_datas(self):
         self.logger.info("Apply %s" % self._name)
+        self.get_external_config_xmlid_cache()
         self.execute(self._datas)
+
+    def get_external_config_xmlid_cache(self):
+        domain = [['module', '=', 'external_config']]
+        datas = self.execute_odoo('ir.model.data', 'search_read', [domain, ['name', 'res_id']], {'context': {}})
+        for data in datas:
+            self._configurator.xmlid_cache['external_config.%s' % data['name']] = data['res_id']
 
     def execute_config(self, config):
         if config:
@@ -46,13 +65,18 @@ class OdooDatas(base.OdooModule):
 
     def odoo_datas(self, datas):
         self.pre_config(datas)
+        raw_load_values = []
+        load_fields = []
+        load = datas.pop('load', False)
+        model = datas.pop('model', False)
         for data in datas:
+            object_ids = False
             self.logger.info("\t\t* %s" % data)
             if not isinstance(datas[data], dict):
                 return
             if 'install' not in self._mode and datas[data].get('on_install_only', False):
                 return
-            model = datas[data].get('model')
+            model = datas[data].get('model') or model
             key = datas[data].get('key', False)
             force_id = datas[data].get('force_id', False)
             delete_all = datas[data].get('delete_all', False)
@@ -125,7 +149,10 @@ class OdooDatas(base.OdooModule):
                                                [[(key, '=', values[key])], 0, 0, "id", False],
                                                {'context': config_context})
             elif force_id:
-                values, object_ids = self.set_force_id(model, values, config_context, force_id)
+                if load:
+                    values['id'] = force_id
+                else:
+                    values, object_ids = self.set_force_id(model, values, config_context, force_id)
             elif action_server_id:
                 self.exec_action_server(action_server_id, datas[data], config_context, no_raise)
                 continue
@@ -142,11 +169,23 @@ class OdooDatas(base.OdooModule):
                     if values[key] and isinstance(values[key][0], str) and '.' in values[key][0]:
                         values[key] = ','.join(values[key])
 
-            for language in languages:
-                config_context['lang'] = language
-                self.save_values(model, values, config_context, force_id, object_ids)
+            if load:
 
-    def save_values(self, model, values, config_context, force_id, object_ids):
+                fields, rec_values = self.save_values(model, values, config_context, force_id, object_ids,
+                                                      load_batch=load)
+                load_fields = list(set(load_fields + fields))
+                raw_load_values.append((fields, rec_values[0]))
+            else:
+                for language in languages:
+                    config_context['lang'] = language
+                    self.save_values(model, values, config_context, force_id, object_ids)
+
+        if load:
+            load_values = [prepare_load_values(load_fields, v[0], v[1]) for v in raw_load_values]
+            context = self._context
+            self.execute_load(model, load_fields, load_values, context)
+
+    def save_values(self, model, values, config_context, force_id, object_ids, load_batch=False):
         if not force_id or isinstance(force_id, int):
             if object_ids:
                 self.execute_odoo(model, 'write', [object_ids, dict(values)], {'context': config_context})
@@ -161,10 +200,15 @@ class OdooDatas(base.OdooModule):
                 else:
                     load_data[0].append(values[i])
             self.logger.debug('%s: %s %s' % (model, load_keys, load_data))
-            # print(load_keys, load_data)
-            res = self.execute_odoo(model, 'load', [load_keys, load_data], {'context': config_context})
-            for message in res['messages']:
-                self.logger.error("%s : %s" % (message['record'], message['message']))
+            if load_batch:
+                return load_keys, load_data
+            else:
+                self.execute_load(model, load_keys, load_data, config_context)
+
+    def execute_load(self, model, load_keys, load_data, config_context):
+        res = self.execute_odoo(model, 'load', [load_keys, load_data], {'context': config_context})
+        for message in res['messages']:
+            self.logger.error("%s : %s" % (message['record'], message['message']))
 
     def set_force_id(self, model, values, config_context, force_id=False):
         if isinstance(force_id, int):
@@ -175,6 +219,8 @@ class OdooDatas(base.OdooModule):
             if '.' not in force_id:
                 force_id = "external_config." + force_id
             values['id'] = force_id
+            if force_id in self._configurator.xmlid_cache:
+                return values, self._configurator.xmlid_cache[force_id]
             module, name = force_id.split('.')
             if self.execute_odoo('ir.model.data', 'search',
                                  [[('module', '=', module), ('name', '=', name)], 0, 0, "id", False],

@@ -38,6 +38,7 @@ class Configurator:
     import_manager = None
     config = dict()
     pre_update_config = dict()
+    xmlid_cache = dict()
 
     def __init__(self, paths=False, install=False, update=False, debug=False, debug_xmlrpc=False, keepass='',
                  config_dict=None):
