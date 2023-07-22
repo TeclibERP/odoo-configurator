@@ -34,10 +34,14 @@ logger = get_logger(__name__)
 class Configurator:
     mode = ["config"]
     debug = False
+    connection = None
+    import_manager = None
+    config = dict()
+    pre_update_config = dict()
 
-    def __init__(self, paths, install=False, update=False, debug=False, debug_xmlrpc=False, keepass=''):
-        self.password_manager = PasswordManager(keepass)
-        self.paths = paths
+    def __init__(self, paths=False, install=False, update=False, debug=False, debug_xmlrpc=False, keepass='',
+                 config_dict=None):
+        self.password_manager = PasswordManager(keepass or os.environ.get('KEEPASS_PASSWORD', ''))
         self.configurator_dir = os.path.dirname(sys.argv[0])
         if install:
             self.mode.append('install')
@@ -45,28 +49,42 @@ class Configurator:
             self.mode.append('update')
         self.debug = debug
         self.debug_xmlrpc = debug_xmlrpc
-        self.config, self.pre_update_config = self.parse_config()
+        if paths:
+            self.paths = paths
+            self.config, self.pre_update_config = self.parse_config()
+        else:
+            self.config = config_dict
         self.log_history = []
         if debug:
             logger.setLevel(logging.DEBUG)
         else:
             logger.setLevel(logging.INFO)
 
-        self.connection = False
-        self.import_manager = False
-        connection.OdooConnection(self).pre_config(self.config['auth']['odoo'])
+        odoo_params = self.get_odoo_auth_params()
+        connection.OdooConnection(self).pre_config(odoo_params)
         self.connection = OdooConnection(
-            self.config['auth']['odoo']['url'],
-            self.config['auth']['odoo']['dbname'],
-            self.config['auth']['odoo']['username'],
-            self.config['auth']['odoo']['password'],
+            odoo_params['url'],
+            odoo_params['dbname'],
+            odoo_params['username'],
+            odoo_params['password'],
             version=self.config.get('version', False),
-            http_user=self.config['auth']['odoo'].get('http_user'),
-            http_password=self.config['auth']['odoo'].get('http_password'),
-            createdb=self.config['auth']['odoo'].get('create_db'),
+            http_user=odoo_params.get('http_user'),
+            http_password=odoo_params.get('http_password'),
+            createdb=odoo_params.get('create_db'),
             debug_xmlrpc=self.debug_xmlrpc,
         )
         self.import_manager = ImportManager(self)
+
+    def get_odoo_auth_params(self):
+        if self.config.get('auth') and self.config.get('auth').get('odoo'):
+            return self.config['auth']['odoo']
+        else:
+            return {
+                'url': os.environ.get('ODOO_URL'),
+                'dbname': os.environ.get('ODOO_DB'),
+                'username': os.environ.get('ODOO_USER'),
+                'password': os.environ.get('ODOO_PASSWORD'),
+            }
 
     def parse_config(self):
         count_inherit = 0

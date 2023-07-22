@@ -52,6 +52,14 @@ line:
 
     ./start_config.py ./clients/name/name.local.yml --install
 
+## Environment variables
+
+Some parameters can be provided by environment variable.
+
+Use ODOO_URL, ODOO_DB, ODOO_USER and ODOO_PASSWORD instead of using auth/odoo params in config file
+
+Use KEEPASS_PASSWORD instead of --keepass command line parameter
+
 ## Pre Update
 
 To prepare a configuration or add a fix use "pre_update", the given scripts will be executed before the normal configuration.
