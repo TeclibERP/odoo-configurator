@@ -27,7 +27,7 @@ class OdooUsers(base.OdooModule):
                 'groups_id': groups_id,
             }
             self._context['active_test'] = False
-            user_id = self.execute_odoo('res.users', 'search', [[('login', '=', vals['login'])], 0, 0, "id", False],
+            user_id = self.execute_odoo('res.users', 'search', [[('login', '=', vals['login'])], 0, 0, "id"],
                                         {'context': self._context})
             if not user_id:
                 self.execute_odoo('res.users', 'create', [vals], {'context': self._context})

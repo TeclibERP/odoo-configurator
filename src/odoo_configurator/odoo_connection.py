@@ -169,16 +169,16 @@ class OdooConnection:
         return res
 
     def get_country(self, code):
-        return self.execute_odoo('res.country', 'search', [[('code', '=', code)], 0, 1, "id", False],
+        return self.execute_odoo('res.country', 'search', [[('code', '=', code)], 0, 1, "id"],
                                  {'context': self._context})[0]
 
     def get_menu(self, website_id, url):
         return self.execute_odoo('website.menu', 'search',
-                                 [[('website_id', '=', website_id), ('url', '=', url)], 0, 1, "id", False],
+                                 [[('website_id', '=', website_id), ('url', '=', url)], 0, 1, "id"],
                                  {'context': self._context})[0]
 
     def get_search_id(self, model, domain, order='asc'):
-        res = self.execute_odoo(model, 'search', [domain, 0, 1, "id %s" % order, False], {'context': self._context})
+        res = self.execute_odoo(model, 'search', [domain, 0, 1, "id %s" % order], {'context': self._context})
         return res[0] if res else False
 
     def get_id_from_xml_id(self, xml_id, no_raise=False):
@@ -209,7 +209,7 @@ class OdooConnection:
         if search_value_xml_id:
             object_id = self.get_id_from_xml_id(search_value_xml_id)
             domain = [(domain[0][0], domain[0][1], object_id)]
-        object_ids = self.execute_odoo(model, 'search', [domain, 0, 0, "id", False], {'context': self._context})
+        object_ids = self.execute_odoo(model, 'search', [domain, 0, 0, "id"], {'context': self._context})
         self.execute_odoo(model, 'write', [object_ids, {'active': is_active}], {'context': self._context})
 
     def read_search(self, model, domain, context=False):
