@@ -20,7 +20,7 @@ class OdooRoles(base.OdooModule):
                     force_id = data.get('force_id', False)
                     role_name = data['values'].get("name")
                     role_id = self.execute_odoo('res.users.role', 'search',
-                                                [[('name', '=', role_name)], 0, 0, "id", False],
+                                                [[('name', '=', role_name)], 0, 0, "id"],
                                                 {'context': self._context})
                     implied_ids = [(5,), ]
                     for group in data['values'].get("implied_ids"):

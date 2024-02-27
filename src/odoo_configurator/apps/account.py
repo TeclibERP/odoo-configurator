@@ -24,15 +24,15 @@ class OdooAccount(base.OdooModule):
                 'city': banks.get(bank).get("city", ""),
                 'zip': banks.get(bank).get("zip", ""),
                 'country': self.execute_odoo('res.country', 'search',
-                                             [[('code', '=', banks.get(bank)["country_code"])], 0, 0, "id", False],
+                                             [[('code', '=', banks.get(bank)["country_code"])], 0, 0, "id"],
                                              {'context': self._context})[0],
                 'phone': banks.get(bank).get("phone", ""),
                 'email': banks.get(bank).get("email", ""),
             }
-            bank_id = self.execute_odoo('res.bank', 'search', [[('bic', '=', vals["bic"])], 0, 0, "id", False],
+            bank_id = self.execute_odoo('res.bank', 'search', [[('bic', '=', vals["bic"])], 0, 0, "id"],
                                         {'context': self._context})
             if not bank_id:
-                bank_id = self.execute_odoo('res.bank', 'search', [[('name', '=', vals["name"])], 0, 0, "id", False],
+                bank_id = self.execute_odoo('res.bank', 'search', [[('name', '=', vals["name"])], 0, 0, "id"],
                                             {'context': self._context})
                 if not bank_id:
                     bank_id = self.execute_odoo('res.bank', 'create', [vals], {'context': self._context})
@@ -50,7 +50,7 @@ class OdooAccount(base.OdooModule):
                 'bank_id': bank_id,
             }
             partner_bank_id = self.execute_odoo('res.partner.bank', 'search',
-                                                [[('acc_number', '=', vals["acc_number"])], 0, 0, "id", False],
+                                                [[('acc_number', '=', vals["acc_number"])], 0, 0, "id"],
                                                 {'context': self._context})
             if not partner_bank_id:
                 partner_bank_id = self.execute_odoo('res.partner.bank', 'create', [vals], {'context': self._context})
@@ -60,7 +60,7 @@ class OdooAccount(base.OdooModule):
 
             # Check default journal exist
             default_journal_id = self.execute_odoo('account.journal', 'search',
-                                                   [[('name', '=', 'Banque')], 0, 0, "id", False],
+                                                   [[('name', '=', 'Banque')], 0, 0, "id"],
                                                    {'context': self._context})
             journal_id = False
             if first:
@@ -77,7 +77,7 @@ class OdooAccount(base.OdooModule):
             }
             if not journal_id:
                 journal_id = self.execute_odoo('account.journal', 'search',
-                                               [[('bank_account_id', '=', vals['bank_account_id'])], 0, 0, "id", False],
+                                               [[('bank_account_id', '=', vals['bank_account_id'])], 0, 0, "id"],
                                                {'context': self._context})
             if not len(journal_id):
                 journal_id = self.execute_odoo('account.journal', 'create', [vals], {'context': self._context})
@@ -95,7 +95,7 @@ class OdooAccount(base.OdooModule):
         # # JOURNAL
         # # ##########################################################################################################
         # sale_journal_id = self.execute_odoo('account.journal', 'search',
-        #                                     [[('name', '=', "Factures clients")], 0, 0, "id", False],
+        #                                     [[('name', '=', "Factures clients")], 0, 0, "id"],
         #                                     {'context': self._context})
         # sale_journal = \
         # self.execute_odoo('account.journal', 'read', [sale_journal_id, ['sequence_id', 'refund_sequence_id']],
@@ -108,7 +108,7 @@ class OdooAccount(base.OdooModule):
         #         'prefix': config.get(key, {}).get('data', {}).get('refund', "")}], {'context': context})
         #
         # purchase_journal_id = self.execute_odoo('account.journal', 'search',
-        #                                         [[('name', '=', "Factures fournisseurs")], 0, 0, "id", False],
+        #                                         [[('name', '=', "Factures fournisseurs")], 0, 0, "id"],
         #                                         {'context': self._context})
         # purchase_journal = \
         # self.execute_odoo('account.journal', 'read', [purchase_journal_id, ['sequence_id', 'refund_sequence_id']],

@@ -109,7 +109,7 @@ class OdooDatas(base.OdooModule):
                     domain = self.eval_param_value(delete_domain)
                 else:
                     domain = []
-                object_ids = self.execute_odoo(model, 'search', [domain, 0, 0, "id", False],
+                object_ids = self.execute_odoo(model, 'search', [domain, 0, 0, "id"],
                                                {'context': config_context})
                 for object_id in object_ids:
                     self.execute_odoo(model, 'unlink', [object_id])
@@ -130,7 +130,7 @@ class OdooDatas(base.OdooModule):
                 if search_value_xml_id:
                     object_id = self._connection.get_id_from_xml_id(search_value_xml_id)
                     domain = [(domain[0][0], domain[0][1], object_id)]
-                object_ids = self.execute_odoo(model, 'search', [domain, 0, 0, "id", False],
+                object_ids = self.execute_odoo(model, 'search', [domain, 0, 0, "id"],
                                                {'context': config_context})
                 self.logger.debug("Update Domain %s %s" % (len(object_ids), model))
                 self.execute_odoo(model, 'write', [object_ids, dict(values)], {'context': config_context})
@@ -146,7 +146,7 @@ class OdooDatas(base.OdooModule):
 
             if key:
                 object_ids = self.execute_odoo(model, 'search',
-                                               [[(key, '=', values[key])], 0, 0, "id", False],
+                                               [[(key, '=', values[key])], 0, 0, "id"],
                                                {'context': config_context})
             elif force_id:
                 if load:
@@ -213,7 +213,7 @@ class OdooDatas(base.OdooModule):
     def set_force_id(self, model, values, config_context, force_id=False):
         if isinstance(force_id, int):
             values['id'] = force_id
-            object_ids = self.execute_odoo(model, 'search', [[('id', '=', force_id)], 0, 0, "id", False],
+            object_ids = self.execute_odoo(model, 'search', [[('id', '=', force_id)], 0, 0, "id"],
                                            {'context': config_context})
         else:
             if '.' not in force_id:
@@ -223,7 +223,7 @@ class OdooDatas(base.OdooModule):
                 return values, self._configurator.xmlid_cache[force_id]
             module, name = force_id.split('.')
             if self.execute_odoo('ir.model.data', 'search',
-                                 [[('module', '=', module), ('name', '=', name)], 0, 0, "id", False],
+                                 [[('module', '=', module), ('name', '=', name)], 0, 0, "id"],
                                  {'context': config_context}):
                 object_ids = self._connection.get_ref(force_id)
             else:

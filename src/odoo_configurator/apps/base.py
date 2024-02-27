@@ -96,7 +96,7 @@ class OdooModule:
                     if config[key].get('update_domain', False):
                         continue
 
-                    object_ids = self.execute_odoo(model, 'search', [domain, 0, 0, "id", False],
+                    object_ids = self.execute_odoo(model, 'search', [domain, 0, 0, "id"],
                                                    {'context': self._context})
                     self.logger.debug("%s %s %s", model, domain, object_ids)
                     if object_ids:
